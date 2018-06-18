@@ -1,4 +1,4 @@
-<?php require 'assets/includes/header.php' ?>
+<?php require 'assets/includes/header.php'; ?>
 
 <?php
 
@@ -54,10 +54,6 @@
   </center>
 </div>
 
-<?php
+<?php mysqli_close($connection); ?>
 
-  mysqli_close($connection);
-
-?>
-
-<?php require 'assets/includes/footer.php' ?>
+<?php require 'assets/includes/footer.php'; ?>
