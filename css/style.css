@@ -19,10 +19,17 @@ body {
   display: block;
 }
 #errorMessage {
-  color: #e60000;
+  color: #ffffff;
   font-size: 115%;
 }
 
 #printButton {
   max-width: 15em;
+}
+#importContainer{
+  background-color: rgba(255,255,255,0.8);
+  max-width: 27em;
+}
+#importContainer h2 {
+  font-weight: bold;
 }

@@ -67,6 +67,12 @@
       <div id="voucherMessage">goed voor <?php echo strtolower($printVoucherArray['descr']); ?> internet toegang</div>
     </div>
   </body>
+  <script src="js/jquery-3.3.1.slim.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      window.print();
+    });
+  </script>
 </html>
 
 <?php mysqli_close($connection); ?>
