@@ -12,7 +12,7 @@ $rollQuery = "select  distinct
               from rolls;";
 $rollResult = mysqli_query($connection, $rollQuery);
 
-if (0) {
+if (isset($_FILES['csvfile'])) {
   $csvfile = $_FILES['csvfile'];
   //file properties
   $file_name = $csvfile['name'];
@@ -44,7 +44,7 @@ if (0) {
 
 <div class="container rounded p-4 mt-5" id="importContainer">
   <h2><center>Import CSV Voucher</center></h2>
-  <form action="test.php" method="post">
+  <form action="import.php" method="post" enctype="multipart/form-data">
     <div class="form-group">
       <label for="rollSelect">Roll</label>
       <select class="form-control" id="rollSelect" name="roll_id">
