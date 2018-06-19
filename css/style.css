@@ -1,7 +1,7 @@
 body {
-  /* background-image: url('./../assets/images/wifibg.jpg');
+  background-image: url('./../assets/images/wifibg.jpg');
   background-size: cover;
-  background-repeat: no-repeat; */
+  background-repeat: no-repeat;
 }
 
 #voucherPanel {
@@ -17,4 +17,12 @@ body {
 }
 #printButton {
   display: block;
+}
+#errorMessage {
+  color: #e60000;
+  font-size: 115%;
+}
+
+#printButton {
+  max-width: 15em;
 }

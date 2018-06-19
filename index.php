@@ -34,9 +34,11 @@
     }
     $updateVoucher = "update vouchers set voucher_used=1 where voucher_id=" . $voucherArray['vid'] . ";";
     if (mysqli_query($connection, $updateVoucher)) {
+      $updateError = 0;
       $updateMessage = "Voucher succesvol geregistreerd.";
     }else{
-      $updateMessage = "Geen vouchers over voor " . $voucherArray['descr'];
+      $updateError = 1;
+      $updateMessage = "Geen vouchers over.";
     }
   }
 
@@ -67,22 +69,24 @@
           <div class="form-group">
             <button type="submit" class="btn btn-info btn-lg">Voucher Aanvragen</button>
           </div>
-          <div class="form-group" id="voucherCodeFieldSet">
-            <fieldset>
-              <label class="control-label" for="voucherReadOnly">Vouchercode:</label>
-              <input class="form-control" id="voucherReadOnly" placeholder="xxxxxxxxxxxxx" readonly="" type="text" value="">
-              <a class="btn mt-2 btn-primary" id="printButton" href="#">&#128438; Print Voucher</a>
-            </fieldset>
-          </div>
+          <?php
+            if (isset($_POST['minutes']) && $updateError != 1) {
+              echo '<div class="form-group" id="voucherCodeFieldSet">
+                      <fieldset>
+                        <label class="control-label" for="voucherReadOnly">Vouchercode:</label>
+                        <input class="form-control" id="voucherReadOnly" placeholder="xxxxxxxxxxxxx" readonly="" type="text" value="' . $voucherArray['code'] . '">
+                        <a class="btn mt-2 btn-primary" id="printButton" href="printv.php?vid=' . $voucherArray['vid'] .  '" target="_blank">&#128438; Print Voucher</a>
+                      </fieldset>
+                      <div id="errorMessage" class="mt-2">' . $updateMessage . '</div>
+                    </div>';
+            }else{
+              echo '<div class="form-group" id="errorMessage">' . $updateMessage . '</div>';
+            }
+          ?>
         </form>
       </center>
     </div>
   </center>
-</div>
-<div class="">
-  <?php
-    print_r($voucherArray);
-  ?>
 </div>
 
 <?php mysqli_close($connection); ?>
