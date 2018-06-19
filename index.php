@@ -13,6 +13,32 @@
   from rolls;";
   $rollResult = mysqli_query($connection, $rollQuery);
 
+  if (isset($_POST['minutes'])) {
+    $voucherQuery = "select
+                        vouchers.voucher_id as vid,
+                        rolls.roll_desc as descr,
+                        vouchers.voucher_code as code
+                      from
+                        rolls, vouchers
+                      where
+                        (rolls.roll_id = vouchers.roll_id)
+                      and
+                        (roll_time = " . $_POST['minutes'] . ")
+                      and
+                          voucher_used = 0
+                      limit 1;";
+    $voucherQueryResult = mysqli_query($connection, $voucherQuery);
+    $voucherArray = array();
+    if (mysqli_num_rows($voucherQueryResult) > 0) {
+      $voucherArray = mysqli_fetch_assoc($voucherQueryResult);
+    }
+    $updateVoucher = "update vouchers set voucher_used=1 where voucher_id=" . $voucherArray['vid'] . ";";
+    if (mysqli_query($connection, $updateVoucher)) {
+      $updateMessage = "Voucher succesvol geregistreerd.";
+    }else{
+      $updateMessage = "Geen vouchers over voor " . $voucherArray['descr'];
+    }
+  }
 
 ?>
 
@@ -45,13 +71,18 @@
             <fieldset>
               <label class="control-label" for="voucherReadOnly">Vouchercode:</label>
               <input class="form-control" id="voucherReadOnly" placeholder="xxxxxxxxxxxxx" readonly="" type="text" value="">
-              <button type="button" name="printButton" class="btn mt-2 btn-primary" id="printButton">&#128438; Print Voucher</button>
+              <a class="btn mt-2 btn-primary" id="printButton" href="#">&#128438; Print Voucher</a>
             </fieldset>
           </div>
         </form>
       </center>
     </div>
   </center>
+</div>
+<div class="">
+  <?php
+    print_r($voucherArray);
+  ?>
 </div>
 
 <?php mysqli_close($connection); ?>
