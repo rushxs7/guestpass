@@ -12,31 +12,36 @@ $rollQuery = "select  distinct
               from rolls;";
 $rollResult = mysqli_query($connection, $rollQuery);
 
-if (isset($_FILES['csvfile'])) {
-  $csvfile = $_FILES['csvfile'];
-  //file properties
-  $file_name = $csvfile['name'];
-  $file_tmp = $csvfile['tmp_name'];
-  $file_error = $csvfile['error'];
+if (!empty($_FILES["csvfile"])) {
+  $csv = $_FILES["csvfile"];
+  $file_name = $csv['name'];
+  $file_tmp = $csv['tmp_name'];
+  $file_error = $csv['error'];
   $file_ext1 = explode('.', $file_name);
   $file_ext2 = end($file_ext1);
-
-  //allowed filetypes
-  $file_types = array('csv');
   if ($file_error === 0) {
-    $random = rand(0,999999);
-    $file_name_new = "voucher" . $random . "." . $file_ext2;
-    $file_destination = "assets/uploads/csv/" . $file_name_new;
-    move_uploaded_file($file_tmp, $file_destination);
+      $random = rand(0,999999);
+      $file_name_new = "voucher" . $random . "." . $file_ext2;
+      $file_destination = "assets/uploads/csv/" . $file_name_new;
+      move_uploaded_file($file_tmp, $file_destination);
+      $voucherFile = fopen($file_destination, 'r');
+      $voucherArray = array();
+      while (($singleRecord = fgetcsv($voucherFile)) !== FALSE) {
+        if ($singleRecord[0][0] != "#") {
+          array_push($voucherArray, $singleRecord[0]);
+        }
+      }
+
+      $stmt = $connection->prepare("INSERT INTO vouchers (roll_id, vouchercode) VALUES (?, ?);");
+      $stmt->bind_param("is", $rollid, $voucode);
+      foreach ($voucherArray as $vouchcode) {
+        $rollid = 1;
+        $voucode = $vouchcode;
+        $stmt->execute();
+      }
+      $stmt->close();
   }else{
-    die();
-  }
-  $voucherFile = fopen($file_destination, 'r');
-  $voucherArray = array();
-  while (($singleRecord = fgetcsv($voucherFile)) !== FALSE) {
-    if ($singleRecord[0][0] != "#") {
-      array_push($voucherArray, $singleRecord[0]);
-    }
+    die("Upload failed");
   }
 }
 
@@ -44,7 +49,7 @@ if (isset($_FILES['csvfile'])) {
 
 <div class="container rounded p-4 mt-5" id="importContainer">
   <h2><center>Import CSV Voucher</center></h2>
-  <form action="import.php" method="post" enctype="multipart/form-data">
+  <form action="import.php" method="post" enctype="multipart/form-data" autocomplete="off">
     <div class="form-group">
       <label for="rollSelect">Roll</label>
       <select class="form-control" id="rollSelect" name="roll_id">
@@ -62,11 +67,11 @@ if (isset($_FILES['csvfile'])) {
       </select>
     </div>
     <div class="form-group">
-      <label for="CSVFile">CSV File</label>
-      <input class="form-control-file" id="CSVFile" aria-describedby="fileHelp" type="file" name="csvfile" required>
-      <small id="fileHelp" class="form-text text-muted">Upload the CSV file here.</small>
+      <label>CSV File</label>
+      <input class="form-control-file" type="file" name="csvfile" required>
+      <small class="form-text text-muted">Upload the CSV file here.</small>
     </div>
-    <button type="submit" name="importcsv" value="Submit" class="btn btn-outline-primary btn-lg">Import</button>
+    <input type="submit" name="importcsv" value="Import" class="btn btn-outline-primary btn-lg">
   </form>
   <?php
     if (isset($voucherArray)) {
