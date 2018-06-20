@@ -31,15 +31,14 @@ if (!empty($_FILES["csvfile"])) {
           array_push($voucherArray, $singleRecord[0]);
         }
       }
-
-      $stmt = $connection->prepare("INSERT INTO vouchers (roll_id, vouchercode) VALUES (?, ?);");
-      // gets stuck here
+      $rollid = (int)$_POST['roll_id'];
+      $stmt = $connection->prepare("INSERT INTO vouchers (roll_id, voucher_code) VALUES (?, ?);");
       $stmt->bind_param("is", $rollid, $voucode);
       foreach ($voucherArray as $vouchcode) {
-        $rollid = 1;
         $voucode = $vouchcode;
         $stmt->execute();
       }
+      $stmtResult = "Alle codes succesvol geimporteerd.";
       $stmt->close();
   }else{
     die("Upload failed");
@@ -73,18 +72,20 @@ if (!empty($_FILES["csvfile"])) {
       <small class="form-text text-muted">Upload the CSV file here.</small>
     </div>
     <input type="submit" name="importcsv" value="Import" class="btn btn-outline-primary btn-lg">
+    <?php
+      if (isset($stmtResult)) {
+        echo '<a href="import.php" class=" ml-3 btn btn-outline-success btn-lg">Reset</a>';
+      }
+    ?>
+
   </form>
-  <?php
-    if (isset($voucherArray)) {
-      echo "<div>";
-        echo '<ul id="voucherList">';
-        foreach ($voucherArray as $vouchercode) {
-          echo "<li>" . $vouchercode . "</li>";
-        }
-        echo "</ul>";
-      echo "</div>";
-    }
-  ?>
+    <?php
+      if (isset($stmtResult)) {
+        echo '<div class="mt-3" id="importStatus">';
+        echo $stmtResult;
+        echo "</div>";
+      }
+    ?>
 
 </div>
 <?php mysqli_close($connection); ?>
