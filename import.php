@@ -69,7 +69,7 @@ if (!empty($_FILES["csvfile"])) {
     <div class="form-group">
       <label>CSV File</label>
       <input class="form-control-file" type="file" name="csvfile" required>
-      <small class="form-text text-muted">Upload the CSV file here.</small>
+      <small class="form-text text-muted">Upload de CSV file hier.</small>
     </div>
     <input type="submit" name="importcsv" value="Import" class="btn btn-outline-primary btn-lg">
     <?php

@@ -60,7 +60,7 @@
                   echo '<option value="' . $rollRow['roll_time'] . '">' . $rollRow['roll_desc'] . "</option>";
                 }
               }else {
-                echo '<option>Error loading database</option>';
+                echo '<option>Error bij het laden van de database</option>';
               }
 
               ?>
