@@ -33,6 +33,7 @@ if (!empty($_FILES["csvfile"])) {
       }
 
       $stmt = $connection->prepare("INSERT INTO vouchers (roll_id, vouchercode) VALUES (?, ?);");
+      // gets stuck here
       $stmt->bind_param("is", $rollid, $voucode);
       foreach ($voucherArray as $vouchcode) {
         $rollid = 1;
