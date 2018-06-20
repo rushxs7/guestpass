@@ -33,3 +33,6 @@ body {
 #importContainer h2 {
   font-weight: bold;
 }
+#importStatus {
+  color: rgb(14, 126, 0)
+}
